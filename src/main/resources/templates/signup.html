@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign up</title>
+</head>
+<body>
+    <h1>Sign up</h1>
+    {{unsuccessfulMessage}}
+    <form action="/signupForm" method="POST">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Your username">
+        <br/>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Your password">
+        <button type="submit">I'm done!</button>
+    </form>
+</body>
+</html>

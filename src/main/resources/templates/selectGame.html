@@ -1,0 +1,69 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select your game</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        console.log("EEEE");
+
+        $(function () {
+            $("#createGame").click(() => {
+                console.log("Creating a new game");
+
+                $.post("/createGame", function (data) {
+                    console.log(data);
+
+                    let searchParams = new URLSearchParams(window.location.search);
+                    searchParams.set("gameId", data);
+                    window.location.href = "http://localhost:8090/game?" + searchParams.toString();
+
+                }).fail(function (xhr) {
+                    if(xhr.status === 401) window.location.pathname = "/login";
+                })
+            });
+
+            $("#joinGame").submit(function (evt) {
+                console.log("Joining a game");
+
+                const id = $("#gameId").val();
+
+                console.log(id);
+
+                $.get("/isGameAvaliable", {
+                    gameId: id
+                }, function (data) {
+                    console.log(data);
+                    if(data === true) window.location.href = "http://localhost:8090/game?gameId=" + id;
+                    else $("#errorMessage").html(" The game code is incorrect. The game does not exist or it is full. ");
+                }).fail(function (xhr) {
+                    console.log(xhr);
+                    if(xhr.status === 401) window.location.pathname = "/login";
+                })
+
+                evt.preventDefault();
+
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+Enter Game
+<br/>
+<h2 id="errorMessage">{{#errorMessage}}
+        {{.}}
+    {{/errorMessage}}</h2>
+<br/>
+<form action="/enterGameForm" method="POST" id="joinGame">
+    <label for="gameId">Game id</label>
+    <input type="text" id="gameId" name="gameId" placeholder="Game id">
+    <button type="submit">Join!</button>
+</form>
+
+<br/>
+
+<button id="createGame">Create new game</button>
+
+</body>
+</html>
